@@ -33,5 +33,46 @@ S와 T가 안정적이라면, ST(두 문자열의 연결)도 안정적이다.
 각 테스트 케이스에 대해서, 테스트 케이스 번호와 입력으로 주어진 문자열을 안정적으로 바꾸는데 필요한 최소 연산의 수를 출력한다.
 
 풀이 
-처음에는 string 이중 배열로 접근했다. 결국 안정적인 문자열을 만들기 위해 필요한 '{','}'의 갯수는 서로 같아야한다. '{'의 갯수와 '}'의 갯수를 구해서 {,}중 더 많은 갯수-전체 입력 갯수/2 를 통해서 얼마나 더 돌려야하는가 에 대해서 계산을 했다. 
-근데 이 계산의 문제는 }{이런 상황일 때를 구하지 못한다는 점이다. 
+벡터로 접근 스택 문제에 착안하여 '{'이 입력이 되면 push_back해주고 백터가 {를 원소로 가지고 있을 때 '}'아 들어오면 pop_back, 없다면 result++;를 진행해주었다.
+추가로 처음에는 cin=='\n'을 다음 벡터 조건으로 넣었지만 cin은 개행문자를 스킵한다느 것을 배웠고 c = cin.get()이 개행문자도 포함한다는 것을 배워서 잘 썼다. 
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main(){
+    vector<char> v;
+    int idx = 0;
+    int result=0;
+    char c;
+    while(true){
+        c=cin.get();
+        if(c=='-'){
+            break;
+        }
+        if(c=='{'){
+            v.push_back('{');
+        }
+        else if(c=='}'){
+            if(v.size()>0){
+            v.pop_back();
+            }
+            else{
+                result++;
+                v.push_back('{');
+            }
+        }
+        else if(c=='\n'){
+            result += (int)v.size()/2;
+            cout<<idx+1<<". "<<result<<"\n";
+            idx++;
+            result = 0;
+            v.clear();
+        }
+
+    }
+        return 0;
+}
+
+
